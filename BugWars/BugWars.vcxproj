@@ -91,7 +91,9 @@
     <ClCompile Include="Source\Code\Bug.cpp" />
     <ClCompile Include="Source\Code\Bullet.cpp" />
     <ClCompile Include="Source\Code\Game.cpp" />
+    <ClCompile Include="Source\Code\Lettice.cpp" />
     <ClCompile Include="Source\Code\Main.cpp" />
+    <ClCompile Include="Source\Code\Search.cpp" />
     <ClCompile Include="Source\Code\pch.cpp" />
     <ClCompile Include="Source\Code\Tank.cpp" />
   </ItemGroup>

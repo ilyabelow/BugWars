@@ -1,52 +1,52 @@
 #include "pch.h"
 #include "Bug.h"
 #include "Game.h"
+#include "GameBase/Framework.h"
+#include "GameBase/TankBase.h"
 
 IMPLEMENT_RTTI(Bug);
 
 void Bug::OnUpdate(float dt)
 {
+	if (g_Game->framework) { // false it tests
+		Point ul = g_Game->tank->position - g_Game->framework->screenSize / 2;
+		Point dr = ul + g_Game->framework->screenSize;
+		visible = position.x + GetSize().x / 2 > ul.x &&
+				  position.y + GetSize().y / 2 > ul.y &&
+				  position.x - GetSize().x / 2 < dr.x &&
+				  position.y - GetSize().y / 2 < dr.y;
+	}
+	if (g_Game->ShouldMoveBug(this)) {
+		g_Game->RemoveBug(this);
+		g_Game->AddBug(this);
+	}
 }
+
 
 BugBase* Bug::FindBugToEat() const
 {
-	Bug* target = nullptr;
-	float min_dist = std::numeric_limits<float>::max();
-	for (auto object : g_Game->objects)
-	{
-		if (auto bug = dynamic_cast<Bug*>(object))
-		{
-			if (bug == this)
-				continue;
-
-			if (bug->disabled)
-				continue;
-
-			if (bug->id > id)
-				continue; // Can't eat that
-
-			float dist = position.Distance(bug->position);
-			if (dist < min_dist)
-			{
-				min_dist = dist;
-				target = bug;
-			}
+	return g_Game->FindNearest(position, 
+		[this](BugBase* bug) {
+			return bug != this && bug->id < id;
 		}
-	}
-
-	return target;
+	);
 }
 
 void Bug::OnEat(BugBase& first, BugBase& second)
 {
 	if (first.id > second.id)
-	{
-		second.disabled = true;
-		second.visible = false;
+	{ // this eats other
+		reinterpret_cast<Bug*>(&second)->Die();
 	}
 	else
-	{
-		first.disabled = true;
-		first.visible = false;
+	{ // other eats this
+		Die();
 	}
+}
+
+void Bug::Die()
+{
+	g_Game->RemoveBug(this);
+	disabled = true;
+	visible = false;
 }
