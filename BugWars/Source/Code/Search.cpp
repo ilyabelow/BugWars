@@ -14,7 +14,7 @@ BugBase* Game::FindNearest(Point pos, const std::function<bool(BugBase*)>& check
 	r *= cell_size;
 	SearchStatus st;
 	ClearMask();
-	float max_r = max_size * 1.4f;
+	float max_r = max_size * 1.5f;
 	while (!st.bug && r < max_r)
 	{
 		float r2 = r * r;

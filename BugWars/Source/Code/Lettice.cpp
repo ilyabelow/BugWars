@@ -22,8 +22,8 @@ void Game::RemoveBug(Bug* bug)
 
 void Game::AddBug(Bug* bug)
 {
-	int cell_i = static_cast<int>(std::clamp(bug->position.x, 0.f, max_size) / cell_size);
-	int cell_j = static_cast<int>(std::clamp(bug->position.y, 0.f, max_size) / cell_size);
+	int cell_i = static_cast<int>(std::clamp(bug->position.x / cell_size, 0.f, lattice_sizef - 1.f));
+	int cell_j = static_cast<int>(std::clamp(bug->position.y / cell_size, 0.f, lattice_sizef - 1.f) );
 	bug->i = cell_i;
 	bug->j = cell_j;
 	auto& cell = GetCell(bug->i, bug->j);
